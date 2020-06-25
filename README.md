@@ -16,3 +16,5 @@ after you done, press ctr+s or click on `Write Changes` (top pannel)
 5.!set_server_main @role --> used for setting role that will be @ if one of servers can't be connected to (for example, if server is down)
 6.!stop_match_state --> to stop tracking. --> can be done by server admin, admin role or main_guy
 7.!start_match_state --> start tracking servers. picks up info from database   --> can be done by server admin, admin role or main_guy
+
+--> you can ask me questions here: <---- https://discord.gg/ueu4J57
