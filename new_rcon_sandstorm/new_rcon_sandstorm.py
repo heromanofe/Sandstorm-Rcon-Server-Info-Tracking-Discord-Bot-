@@ -100,5 +100,5 @@ async def set_vars():
     admin_role_id = result[0]
     server_main = result[1]
 asyncio.run(set_vars())
-client.run('NzEzNTM2MDAyNDIxMTYyMDA1.XshiOA.WFExvObbnJ0wmMJiw4Sr2nsVhWU') ##YOUR TOKEN HERE##
+client.run('') ##YOUR TOKEN HERE##
 
