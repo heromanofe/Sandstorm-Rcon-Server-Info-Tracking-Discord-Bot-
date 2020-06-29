@@ -6,22 +6,31 @@ last_state = ""
 message_counting = 0
 ##############################################################################
 class Server_match:
-    def __init__(self, ip, server_port,password, game, mcr, short_name, full_name,max_score):
+    def __init__(self, ip, server_port,password, game, mcr, short_name, full_name,max_score, query):
         self.ip = ip #IP
         self.server_port = server_port  #RCON port
         self.password = password
         self.game_port = game
+        self.query = query
         self.mcr = mcr
         self.short_name = short_name
         self.full_name = full_name
         self.max_score = max_score
-        lost = 0
-        mss =""
+    timer = 0
+    lost = 0
+    tries = 0
+    max_players=0
+    bot_count= 0
+    error = 0
+    mss =""
+    check_for_first_level= 1
+    check_for_second_level = 1
     Match_state = "NONE, NO" ##for example, ROUND ACTIVE
     ins_wins= 0 #Curently how many rounds won INSURGENTS
     server_number = 0 #number, like #2
     security_wins = 0 #sec wins
     map = "NONE" #MAP on server
+    second_map = ""
     lastWin_team = 3
     dogs = ""
     pug_state = ""
@@ -76,5 +85,33 @@ def Obj_naming(num):
         mmm = "I"
     elif num == "J":
         mmm = "J"
+    else:mmm=num
+    return mmm
+
+
+def Map_naming(num):
+    mmm = ""
+    if num == "Canyon":
+        mmm = "Crossing"
+    elif num == "Farmhouse":
+        mmm = "Farmhouse"
+    elif num == "Town":
+        mmm = "Hideout"
+    elif num == "Sinjar":
+        mmm = "Hillside"
+    elif num == "Ministry":
+        mmm = "Ministry"
+    elif num == 'Compound':
+        mmm = "Outskirts"
+    elif num == 'PowerPlant':
+        mmm = "PowerPlant"
+    elif num == "Precinct":
+        mmm = "Precinct"
+    elif num == "Mountain":
+        mmm = "Summit"
+    elif num == "Buhriz":
+        mmm = "Tideway"
+    elif num == "Oilfield":
+        mmm = "Refinery"
     else:mmm=num
     return mmm
