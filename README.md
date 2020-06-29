@@ -1,5 +1,5 @@
 # Sandstorm-Rcon-Server-Info-Tracking-Discord-Bot-
-Discord Bot that tracks stuff using Rcon and stuff
+Discord Bot that tracks stuff using Rcon and query (in the future I will use rcon more, but for now.. well, it is safe version for sure :D )
 
 1.you need to open Config.py file and add your discord bot token there also you could (if you don't want to do DB stuff) add your server variables there. please note that you need to delete # and to add more servers just copy append.... message and paste it to the next line. also half of the stuff there is automized and will be deleted like server name and mutators. to change database and add IP\Password and port use sum sqlite3 db changer, for example I used https://sqlitebrowser.org/ 
 Open db_server_info.db in sqlbrowser and go to `browse data` tab there change from `MISC` to `Server_list` --> `IP`: write there IP of server
