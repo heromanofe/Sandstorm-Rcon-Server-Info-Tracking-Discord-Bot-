@@ -19,3 +19,6 @@ after you done, press ctr+s or click on `Write Changes` (top pannel)
 7.!start_match_state --> start tracking servers. picks up info from database   --> can be done by server admin, admin role or main_guy
 EXTRA THIC --> you can try to do !say message and with emoji choose server. people there might see ur message ;)
 --> you can ask me questions here: <---- https://discord.gg/ueu4J57
+8. to run script: in cmd:      |           in therminal
+cd path\to\bot                 |    cd path\to\bot  
+py new_rcon_sandstorm.py       |    py3 new_rcon_sandstorm.py
