@@ -38,6 +38,7 @@ class Server_match:
     obj_name = ""
     obj_type = ""
     mutators = ""
+    edit_error = 0
 ##############################################################################
 def numbers(num):
     mmm = ""
