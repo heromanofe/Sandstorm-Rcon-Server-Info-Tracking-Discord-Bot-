@@ -3,7 +3,11 @@ mcrcon= mcrcon_new
 import valve.source
 import valve.source.a2s
 import valve.source.master_server
+from datetime import datetime
+import time
+import valve.rcon
 #################################################################################################
+My_id= 0 #Here you could put sumeones discord ID so he could do admin stuff with this bot without being Server owner
 all_servers = Config.all_ser()
 last_state = Classes.last_state
 message_counting = Classes.message_counting
@@ -58,9 +62,10 @@ async def rcon_things(message, b, curently_tracking):
             b.mutators = mutators.replace('BP_Mutator_', "").replace("_c", "")
             k = "SERVER TRACKING INITIALIZED FOR THE FIRST TIME ON: {0}".format(b.ip+":"+str(b.game_port))
             b.check_for_first_level = 0
+            b.check_for_second_level = 1
             resp = ""
-            print("------- USED RCON FOR SERVER {0} (FIRST TIME MUTATORS GRAB) FOUND THIS: {1} -------".format(b.ip+":"+str(b.game_port), b.mutators))
-        if b.map.split(" ")[0] != b.second_map:
+            print("------- USED RCON FOR SERVER {0} (FIRST TIME MUTATORS GRAB) FOUND THIS: {1} ------- {2}".format(b.ip+":"+str(b.game_port), b.mutators, datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+        if b.map.split(" ")[0] != b.second_map and int(b.players_count) > 0:
             b.check_for_second_level = 1
             k="MAP IN (RCON): {0} | SCENARIO:{1} IS DIFFERENT FROM QUERY GRABED MAP: {2}".format(b.map.split(" ")[0],b.map, b.second_map)
         if b.check_for_second_level == 1:
@@ -73,7 +78,7 @@ async def rcon_things(message, b, curently_tracking):
                 b.map = b.map[0].replace("_", " ").replace("Scenario","").replace(".","").strip()
             else: b.map = 'No map'
             b.check_for_second_level = 0
-            print("------- USED RCON FOR SERVER {0} (CHECKING FOR SCENARIO BECAUSE OF:{1}) SCENARIO NOW IS: {2} -------".format(b.ip+":"+str(b.game_port), reason, b.map))
+            print("------- USED RCON FOR SERVER {0} (CHECKING FOR SCENARIO BECAUSE OF:{1}) SCENARIO NOW IS: {2} -------".format(b.ip+":"+str(b.game_port), reason, b.map)+"  |  "+datetime.now().strftime('%Y-%m-%d %H:%M:%S')+"  |")
             print("------------------------------------------------------------------")
             b.timer = 0
             ############################
@@ -137,6 +142,7 @@ async def rcon_things(message, b, curently_tracking):
             b.obj_name = resp.split("_")
             b.obj_name =  b.obj_name[len(b.obj_name)-1].split("'")[0]
             if 'nCache' in b.obj_type:b.obj_type = "WeaponCache"
+        
         await Match_state(message, b)
 
                     
@@ -184,7 +190,7 @@ async def Match_state(message, b):
         match = b.Match_state.replace('MatchState =', '').replace(" ",'').replace('"','')
         oke = ""
         other = ""
-      
+        #b.full_name = b.short_name+" || "+b.full_name
         if b.security_wins <= 9:
             sc[0]=":zero:"
             sc[1]=numbers(b.security_wins)
@@ -203,6 +209,7 @@ async def Match_state(message, b):
             enemy_team = ins_e
         b.obj_name = Classes.Obj_naming(b.obj_name)
        # serv_full = b.full_name
+        
         embed.add_field(name='{1}```{0:^30}```{1}'.format(b.full_name, dogs_team), value="**Players:** `{0}\{1}`\n**Map:** `{2}`".format(str(b.players_count),str(b.max_players), b.map), inline=True)#**Match_state:** `{2}`\n**Last Winning Team:** `{2}`\n**Curently on:** `{3} ({4})`\n**Map:** `{5}`".format(b.players_count,match, mda,b.obj_name, b.obj_type, b.map), inline=True)**OLD DOGS**|{1}| --{0}-- |
         embed.add_field(name='\u200b', value='\u200b', inline = True)
         embed.add_field(name="\u200b", value="​​​​​​​ **Mutators**: `{1}`\n```cs\n{0:^28}```".format(b.ip+":"+str(b.game_port), b.mutators), inline=True) #\u200b \u200b \u200b \u200b \u200b \u200b \u200b **BOT TEAM**|{1}| --{0}--  |     serv_full
@@ -219,13 +226,28 @@ async def Match_state(message, b):
         embed.add_field(name="===========================================================", value="{0}\n|___________________________________________________________|```".format(pl))
         m = embed
         b.error = 5
+        #if int(b.players_count) > 0:
         if b.pug_state == "":
-            b.pug_state = await message.channel.send(embed=m)
-            b.error = 6
-        else: await b.pug_state.edit(embed=m)
-
+                b.pug_state = await message.channel.send(embed=m)
+                b.error = 6
+        else:
+                b.error = 7
+                try:
+                    await b.pug_state.edit(embed=m)
+                    b.edit_error = 0
+                except:
+                    print("Error!! couldn't edit message.!!"+"  |  "+datetime.now().strftime('%Y-%m-%d %H:%M:%S')+"  |")
+                    b.edit_error += 1
+                    if b.edit_error >= 5:
+                        b.pug_state = await message.channel.send(embed=m)
+     #   else:
+      #      if b.pug_state != "":
+       #         await b.pug_state.delete()
+        #        b.pug_state = ""
 async def players_query(b):
         SERVER_ADDRESS = (b.ip, b.query)
+        if b.query == 0:
+            SERVER_ADDRESS = ("62.171.147.243", 27131)
         with valve.source.a2s.ServerQuerier(SERVER_ADDRESS, 2) as server:
             try:
                 info = server.info()
@@ -241,6 +263,7 @@ async def players_query(b):
                     secs=0
 
                 b.full_name = "{server_name}".format(**info)
+
                 b.second_map = "{map}".format(**info)
                 b.second_map = Classes.Map_naming(b.second_map)
                 b.players_count = "{player_count}".format(**info)
